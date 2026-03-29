@@ -100,18 +100,6 @@ st.markdown("""
         padding-top: 2rem;
         padding-bottom: 3rem;
     }
-    .warning-box {
-        background: rgba(255, 248, 232, 0.72);
-        border: 1px solid rgba(199, 74, 87, 0.14);
-        border-radius: 14px;
-        padding: 10px 14px;
-        margin: 10px 0 6px 0;
-        font-weight: 500;
-        font-size: 0.92rem;
-        line-height: 1.45;
-        color: var(--muted);
-        box-shadow: none;
-    }
     .section-shell {
         background: rgba(255,255,255,0.72);
         border: 1px solid rgba(37, 50, 74, 0.08);
@@ -227,30 +215,10 @@ st.markdown("""
 
 # ── Başlık ───────────────────────────────────────────────────────────────────
 st.title("İlaç Analiz Asistanı")
-st.caption("Görsel ile tara veya metinle ara → İlaç hakkında hızlı bilgi al")
-
-# ── Uyarı Bandı ──────────────────────────────────────────────────────────────
-st.markdown("""
-<div class="warning-box">
-Bu uygulama yalnızca bilgilendirme amaçlıdır.
-Tıbbi tavsiye niteliği taşımaz. İlaç kullanmadan önce
-mutlaka doktorunuza veya eczacınıza danışınız.
-</div>
-""", unsafe_allow_html=True)
 
 st.divider()
 
 # ── Analiz Yöntemi ───────────────────────────────────────────────────────────
-st.markdown("""
-<div class="section-shell">
-    <p class="section-kicker">Akıllı Tarama Alanı</p>
-    <h2 class="section-title">Görsel veya metin ile hızlı analiz</h2>
-    <p class="section-copy">
-        Fotoğraf yükle ya da ilaç adını yaz, sistem uygun akışla analiz etsin.
-    </p>
-</div>
-""", unsafe_allow_html=True)
-
 analysis_mode = st.radio(
     "Analiz yöntemi",
     options=["Görsel ile analiz", "Metin ile ara"],
