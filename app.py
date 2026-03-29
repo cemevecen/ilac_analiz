@@ -21,7 +21,7 @@ if "analysis_result" not in st.session_state:
 def render_analysis_result(result: dict) -> None:
     """Kaydedilen analiz sonucunu tekrar tekrar gostermek icin kullan."""
     st.divider()
-    st.subheader(f"📋 {result['drug_name']} - Analiz Sonucu")
+    st.subheader(f"{result['drug_name']} - Analiz Sonucu")
 
     gemini_data = result.get("gemini_data", {})
     if gemini_data and "hata" not in gemini_data:
@@ -36,20 +36,19 @@ def render_analysis_result(result: dict) -> None:
     st.markdown(result["analysis"])
 
     st.error(
-        "🏥 ÖNEMLI UYARI: Bu analiz yapay zeka tarafından oluşturulmuştur. "
+        "ÖNEMLİ UYARI: Bu analiz yapay zeka tarafından oluşturulmuştur. "
         "Tıbbi teşhis veya tedavi tavsiyesi değildir. "
         "İlaç kullanımı için mutlaka doktorunuza danışınız.",
-        icon="⚠️"
     )
 
     st.divider()
-    st.subheader("📥 Raporu İndir")
+    st.subheader("Raporu İndir")
     dl_col1, dl_col2 = st.columns(2)
 
     with dl_col1:
         if result.get("pdf_bytes"):
             st.download_button(
-                label="📄 PDF İndir",
+                label="PDF İndir",
                 data=result["pdf_bytes"],
                 file_name=f"ilac_raporu_{result['drug_name'].replace(' ', '_')}.pdf",
                 mime="application/pdf",
@@ -60,7 +59,7 @@ def render_analysis_result(result: dict) -> None:
 
     with dl_col2:
         st.download_button(
-            label="📝 Metin İndir",
+            label="Metin İndir",
             data=result["text_bytes"],
             file_name=f"ilac_raporu_{result['drug_name'].replace(' ', '_')}.txt",
             mime="text/plain",
@@ -69,8 +68,8 @@ def render_analysis_result(result: dict) -> None:
 
 # ── Sayfa ayarları ──────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="💊 İlaç Analiz Asistanı",
-    page_icon="💊",
+    page_title="İlaç Analiz Asistanı",
+    page_icon="",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
@@ -102,13 +101,13 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ── Başlık ───────────────────────────────────────────────────────────────────
-st.title("💊 İlaç Analiz Asistanı")
+st.title("İlaç Analiz Asistanı")
 st.caption("Görsel ile tara veya metinle ara → İlaç hakkında hızlı bilgi al")
 
 # ── Uyarı Bandı ──────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="warning-box">
-⚠️ Bu uygulama yalnızca bilgilendirme amaçlıdır.
+Bu uygulama yalnızca bilgilendirme amaçlıdır.
 Tıbbi tavsiye niteliği taşımaz. İlaç kullanmadan önce
 mutlaka doktorunuza veya eczacınıza danışınız.
 </div>
@@ -119,22 +118,22 @@ st.divider()
 # ── Analiz Yöntemi ───────────────────────────────────────────────────────────
 analysis_mode = st.radio(
     "Analiz yöntemi",
-    options=["📷 Görsel ile analiz", "✍️ Metin ile ara"],
+    options=["Görsel ile analiz", "Metin ile ara"],
     horizontal=True,
 )
 
 image = None
 manual_drug = ""
 
-if analysis_mode == "📷 Görsel ile analiz":
+if analysis_mode == "Görsel ile analiz":
     col1, col2 = st.columns(2)
 
     with col1:
-        camera_photo = st.camera_input("📷 Kamera ile Çek")
+        camera_photo = st.camera_input("Kamera ile Çek")
 
     with col2:
         uploaded_file = st.file_uploader(
-            "📁 Dosya Yükle",
+            "Dosya Yükle",
             type=["jpg", "jpeg", "png", "webp", "bmp"],
             help="İlaç kutusunun net fotoğrafını yükleyin"
         )
@@ -157,9 +156,9 @@ else:
 st.divider()
 
 # ── Analiz Başlat ────────────────────────────────────────────────────────────
-is_ready_to_analyze = image is not None if analysis_mode == "📷 Görsel ile analiz" else bool(manual_drug)
+is_ready_to_analyze = image is not None if analysis_mode == "Görsel ile analiz" else bool(manual_drug)
 analyze_btn = st.button(
-    "🔍 Görseli Analiz Et" if analysis_mode == "📷 Görsel ile analiz" else "🔎 Metinle Ara",
+    "Görseli Analiz Et" if analysis_mode == "Görsel ile analiz" else "Metinle Ara",
     type="primary",
     use_container_width=True,
     disabled=not is_ready_to_analyze
@@ -171,49 +170,49 @@ if analyze_btn:
     active_ingredient = ""
     gemini_data = {}
 
-    with st.status("🔄 Analiz yapılıyor...", expanded=True) as status:
+    with st.status("Analiz yapılıyor...", expanded=True) as status:
 
         # ADIM 1: Görsel analiz
-        if analysis_mode == "📷 Görsel ile analiz" and image:
-            st.write("🖼️ Görsel analiz ediliyor (Gemini Vision)...")
+        if analysis_mode == "Görsel ile analiz" and image:
+            st.write("Görsel analiz ediliyor (Gemini Vision)...")
             try:
                 gemini_data = analyze_image_with_gemini(image)
                 drug_name = gemini_data.get("ilac_adi", "")
                 active_ingredient = gemini_data.get("etken_madde", "")
-                st.write(f"✅ İlaç tespit edildi: **{drug_name}**")
+                st.write(f"İlaç tespit edildi: **{drug_name}**")
             except Exception:
-                st.write("⚠️ Gemini hatası, OCR deneniyor...")
+                st.write("Gemini hatası, OCR deneniyor...")
 
             # Gemini başarısızsa OCR dene
             if not drug_name:
-                st.write("🔡 OCR ile metin okunuyor...")
+                st.write("OCR ile metin okunuyor...")
                 raw_text = extract_text_from_image(image)
                 cleaned = clean_ocr_text(raw_text)
                 drug_name = extract_drug_name(cleaned)
                 active_ingredient = cleaned
-                st.write(f"✅ Metin okundu: {cleaned[:100]}...")
+                st.write(f"Metin okundu: {cleaned[:100]}...")
 
-        elif analysis_mode == "✍️ Metin ile ara" and manual_drug:
-            st.write(f"✍️ Manuel arama kullanılıyor: **{manual_drug}**")
+        elif analysis_mode == "Metin ile ara" and manual_drug:
+            st.write(f"Manuel arama kullanılıyor: **{manual_drug}**")
             drug_name = manual_drug
             active_ingredient = manual_drug
 
         # ADIM 2: Web araması
-        st.write(f"🌐 '{drug_name}' internette aranıyor...")
+        st.write(f"'{drug_name}' internette aranıyor...")
         web_info = search_drug_info(drug_name)
         if "bulunamadı" in web_info or not web_info.strip():
-            st.write("⚠️ İnternet bilgisi sınırlı, etken maddeye göre yorum yapılacak.")
+            st.write("İnternet bilgisi sınırlı, etken maddeye göre yorum yapılacak.")
         else:
-            st.write("✅ Web bilgisi bulundu.")
+            st.write("Web bilgisi bulundu.")
 
         # ADIM 3: LLM Analizi
-        st.write("🤖 Groq LLM ile detaylı analiz yapılıyor...")
+        st.write("Groq LLM ile detaylı analiz yapılıyor...")
         if drug_name:
             analysis = analyze_drug(drug_name, active_ingredient, web_info)
         else:
             analysis = quick_ingredient_analysis(active_ingredient)
 
-        status.update(label="✅ Analiz tamamlandı!", state="complete")
+        status.update(label="Analiz tamamlandı!", state="complete")
 
     pdf_bytes = None
     try:
@@ -234,5 +233,5 @@ if st.session_state.analysis_result:
 
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.divider()
-st.caption("💡 Powered by Groq LLaMA · Google Gemini · EasyOCR · Streamlit")
-st.caption("🎓 cimivicin")
+st.caption("Powered by Groq LLaMA · Google Gemini · EasyOCR · Streamlit")
+st.caption("cimivicin")

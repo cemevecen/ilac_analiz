@@ -11,7 +11,7 @@ SYSTEM_PROMPT = """Sen deneyimli bir eczacı ve tıp bilgi asistanısın.
 Kullanıcıya ilaçlar hakkında bilgi verirsin.
 MUTLAKA her cevabın sonuna şu uyarıyı ekle:
 
-⚠️ UYARI: Bu bilgiler genel bilgilendirme amaçlıdır. Tıbbi tavsiye değildir.
+UYARI: Bu bilgiler genel bilgilendirme amaçlıdır. Tıbbi tavsiye değildir.
 Herhangi bir ilaç kullanmadan önce mutlaka doktorunuza veya eczacınıza danışınız.
 Kendi kendinize ilaç kullanmayınız.
 """
@@ -35,24 +35,24 @@ Web'den bulunan bilgiler:
 
 Lütfen şu başlıkları Türkçe olarak kapsamlı şekilde açıkla:
 
-## 💊 İlaç Hakkında Genel Bilgi
+## İlaç Hakkında Genel Bilgi
 
-## 🎯 Hangi Hastalıklara İyi Gelir (Endikasyonlar)
+## Hangi Hastalıklara İyi Gelir (Endikasyonlar)
 
-## ⚗️ Etken Madde ve Etki Mekanizması
+## Etken Madde ve Etki Mekanizması
 
-## ⚠️ Yan Etkiler
+## Yan Etkiler
 - Yaygın yan etkiler
 - Ciddi yan etkiler (varsa)
 
-## 🚫 Kimler Kullanmamalı (Kontrendikasyonlar)
+## Kimler Kullanmamalı (Kontrendikasyonlar)
 
-## 💊 Doz Bilgisi (Genel)
+## Doz Bilgisi (Genel)
 
-## 🔄 Muadil / Eşdeğer İlaçlar
+## Muadil / Eşdeğer İlaçlar
 (Aynı etken maddeyi içeren veya benzer etkili ilaçlar)
 
-## 💡 Önemli Notlar
+## Önemli Notlar
 
 Bilgi bulunamayan bölümlerde etken maddeye göre genel yorumda bulun.
 """
