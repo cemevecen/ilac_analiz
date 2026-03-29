@@ -77,25 +77,148 @@ st.set_page_config(
 # ── Özel CSS (mobil uyum) ────────────────────────────────────────────────────
 st.markdown("""
 <style>
-    .stApp { max-width: 800px; margin: 0 auto; }
-    .warning-box {
-        background: #fff3cd;
-        border: 2px solid #ffc107;
-        border-radius: 10px;
-        padding: 15px;
-        margin: 10px 0;
-        font-weight: bold;
+    :root {
+        --bg: #f7f6f2;
+        --paper: rgba(255, 255, 255, 0.86);
+        --paper-strong: #ffffff;
+        --ink: #25324a;
+        --muted: #6b7280;
+        --accent: #c74a57;
+        --accent-soft: #f6d9dd;
+        --line: rgba(37, 50, 74, 0.10);
+        --shadow: 0 18px 60px rgba(37, 50, 74, 0.08);
     }
-    .result-box {
-        background: #f0f7ff;
-        border-left: 4px solid #0066cc;
-        border-radius: 5px;
-        padding: 15px;
-        margin: 10px 0;
+    .stApp {
+        max-width: 880px;
+        margin: 0 auto;
+        background:
+            radial-gradient(circle at top left, rgba(199, 74, 87, 0.12), transparent 28%),
+            radial-gradient(circle at top right, rgba(44, 95, 122, 0.10), transparent 24%),
+            linear-gradient(180deg, #fcfbf8 0%, var(--bg) 100%);
+    }
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+    }
+    .warning-box {
+        background: linear-gradient(135deg, #fff7e8 0%, #fff2d9 100%);
+        border: 1px solid rgba(199, 74, 87, 0.18);
+        border-radius: 22px;
+        padding: 18px 20px;
+        margin: 14px 0;
+        font-weight: bold;
+        color: var(--ink);
+        box-shadow: var(--shadow);
+    }
+    .section-shell {
+        background: linear-gradient(135deg, rgba(255,255,255,0.94), rgba(255,248,244,0.84));
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 24px 26px;
+        margin: 8px 0 18px 0;
+        box-shadow: var(--shadow);
+    }
+    .section-kicker {
+        margin: 0 0 8px 0;
+        font-size: 0.82rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 700;
+    }
+    .section-title {
+        margin: 0;
+        font-size: 1.75rem;
+        line-height: 1.15;
+        color: var(--ink);
+    }
+    .section-copy {
+        margin: 10px 0 0 0;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    .panel-kicker {
+        margin: 0;
+        color: var(--accent);
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    .panel-title {
+        margin: 8px 0 0 0;
+        color: var(--ink);
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+    .panel-copy {
+        margin: 8px 0 18px 0;
+        color: var(--muted);
+        line-height: 1.55;
+        font-size: 0.96rem;
+    }
+    [data-testid="stRadio"] {
+        background: rgba(255,255,255,0.76);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.45rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 1rem;
+    }
+    [data-testid="stRadio"] label {
+        border-radius: 999px;
+        padding: 0.55rem 1rem;
+        transition: all 0.2s ease;
+    }
+    [data-testid="stRadio"] label:has(input:checked) {
+        background: linear-gradient(135deg, #cf5a66 0%, #b73e4b 100%);
+        color: white;
+        box-shadow: 0 12px 30px rgba(183, 62, 75, 0.28);
+    }
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,248,244,0.86));
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        box-shadow: var(--shadow);
+    }
+    [data-testid="stFileUploaderDropzone"] {
+        background: linear-gradient(180deg, rgba(247, 244, 240, 0.9), rgba(255,255,255,0.96));
+        border: 1.5px dashed rgba(183, 62, 75, 0.28);
+        border-radius: 22px;
+        padding: 1.4rem 1.2rem;
+    }
+    [data-testid="stCameraInput"] {
+        background: linear-gradient(180deg, rgba(247, 244, 240, 0.9), rgba(255,255,255,0.96));
+        border: 1.5px solid rgba(183, 62, 75, 0.16);
+        border-radius: 22px;
+        overflow: hidden;
+    }
+    [data-testid="stCameraInput"] img {
+        border-radius: 18px 18px 0 0;
+    }
+    [data-testid="stTextInputRootElement"] input {
+        border-radius: 18px;
+        border: 1px solid rgba(37, 50, 74, 0.12);
+        background: rgba(255,255,255,0.94);
+    }
+    .stButton > button {
+        border-radius: 18px;
+        min-height: 3.25rem;
+        font-weight: 700;
+        border: none;
+        box-shadow: 0 18px 35px rgba(183, 62, 75, 0.20);
     }
     @media (max-width: 600px) {
         .stButton > button { width: 100% !important; }
         h1 { font-size: 1.5rem !important; }
+        .section-shell {
+            padding: 20px 18px;
+            border-radius: 22px;
+        }
+        .section-title {
+            font-size: 1.4rem;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -116,6 +239,17 @@ mutlaka doktorunuza veya eczacınıza danışınız.
 st.divider()
 
 # ── Analiz Yöntemi ───────────────────────────────────────────────────────────
+st.markdown("""
+<div class="section-shell">
+    <p class="section-kicker">Akıllı Tarama Alanı</p>
+    <h2 class="section-title">İlacını etkileyici bir akışla analiz et</h2>
+    <p class="section-copy">
+        Fotoğrafla kutu üzerindeki bilgileri çıkar veya ilaç adını yazarak doğrudan arama başlat.
+        Bu bölüm canlı sunumda daha güçlü görünmesi için kart yapısında düzenlendi.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 analysis_mode = st.radio(
     "Analiz yöntemi",
     options=["Görsel ile analiz", "Metin ile ara"],
@@ -129,14 +263,27 @@ if analysis_mode == "Görsel ile analiz":
     col1, col2 = st.columns(2)
 
     with col1:
-        camera_photo = st.camera_input("Kamera ile Çek")
+        with st.container(border=True):
+            st.markdown("""
+            <p class="panel-kicker">Canlı Tarama</p>
+            <h3 class="panel-title">Kamera ile Çek</h3>
+            <p class="panel-copy">Kutuyu kadraja al, ilaç adı ve etken maddeyi fotoğraftan okuyalım.</p>
+            """, unsafe_allow_html=True)
+            camera_photo = st.camera_input("Kamera ile Çek", label_visibility="collapsed")
 
     with col2:
-        uploaded_file = st.file_uploader(
-            "Dosya Yükle",
-            type=["jpg", "jpeg", "png", "webp", "bmp"],
-            help="İlaç kutusunun net fotoğrafını yükleyin"
-        )
+        with st.container(border=True):
+            st.markdown("""
+            <p class="panel-kicker">Hazır Görsel</p>
+            <h3 class="panel-title">Dosya Yükle</h3>
+            <p class="panel-copy">Galeri veya ekran görüntüsünden net bir ilaç kutusu seçebilirsin.</p>
+            """, unsafe_allow_html=True)
+            uploaded_file = st.file_uploader(
+                "Dosya Yükle",
+                type=["jpg", "jpeg", "png", "webp", "bmp"],
+                help="İlaç kutusunun net fotoğrafını yükleyin",
+                label_visibility="collapsed"
+            )
 
     image_source = camera_photo or uploaded_file
     if image_source:
@@ -146,12 +293,18 @@ if analysis_mode == "Görsel ile analiz":
     else:
         st.info("İlaç kutusunun net bir fotoğrafını yükleyin veya kamerayla çekin.")
 else:
-    manual_drug = st.text_input(
-        "İlaç adı veya etken madde",
-        placeholder="örn: Dolven, Parol, Aspirin, İbuprofen...",
-        help="Bu modda yalnızca yazdığınız metne göre arama yapılır; görsel kullanılmaz."
-    ).strip()
-    st.caption("Manuel aramada sistem doğrudan yazdığınız ilaç adına veya etken maddeye göre analiz yapar.")
+    with st.container(border=True):
+        st.markdown("""
+        <p class="panel-kicker">Doğrudan Arama</p>
+        <h3 class="panel-title">Metin ile Ara</h3>
+        <p class="panel-copy">İlaç adı ya da etken madde yaz. Sistem yalnızca yazdığın ifadeye göre analiz yapsın.</p>
+        """, unsafe_allow_html=True)
+        manual_drug = st.text_input(
+            "İlaç adı veya etken madde",
+            placeholder="örn: Dolven, Parol, Aspirin, İbuprofen...",
+            help="Bu modda yalnızca yazdığınız metne göre arama yapılır; görsel kullanılmaz."
+        ).strip()
+        st.caption("Manuel aramada sistem doğrudan yazdığınız ilaç adına veya etken maddeye göre analiz yapar.")
 
 st.divider()
 
