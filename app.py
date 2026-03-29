@@ -223,6 +223,7 @@ analysis_mode = st.radio(
     "Analiz yöntemi",
     options=["Görsel ile analiz", "Metin ile ara"],
     horizontal=True,
+    label_visibility="collapsed",
 )
 
 image = None
