@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+.DS_Store
+*.egg-info/
+venv/
+.venv/
+uploads/
+*.jpg
+*.png
+*.jpeg
+.streamlit/
