@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+DEFAULT_GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 SYSTEM_PROMPT = """Sen deneyimli bir eczacı ve tıp bilgi asistanısın.
 Kullanıcıya ilaçlar hakkında bilgi verirsin.
@@ -58,7 +59,7 @@ Bilgi bulunamayan bölümlerde etken maddeye göre genel yorumda bulun.
 
     try:
         response = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",  # veya mixtral-8x7b-32768
+            model=DEFAULT_GROQ_MODEL,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt}
@@ -89,7 +90,7 @@ Kısa ve net şekilde:
 """
     try:
         response = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
+            model=DEFAULT_GROQ_MODEL,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt}
