@@ -50,7 +50,7 @@ st.markdown("""
 
 # ── Başlık ───────────────────────────────────────────────────────────────────
 st.title("💊 İlaç Analiz Asistanı")
-st.caption("Fotoğraf çek veya yükle → İlaç hakkında her şeyi öğren")
+st.caption("Görsel ile tara veya metinle ara → İlaç hakkında hızlı bilgi al")
 
 # ── Uyarı Bandı ──────────────────────────────────────────────────────────────
 st.markdown("""
@@ -63,40 +63,53 @@ mutlaka doktorunuza veya eczacınıza danışınız.
 
 st.divider()
 
-# ── Görsel Giriş ─────────────────────────────────────────────────────────────
-col1, col2 = st.columns(2)
+# ── Analiz Yöntemi ───────────────────────────────────────────────────────────
+analysis_mode = st.radio(
+    "Analiz yöntemi",
+    options=["📷 Görsel ile analiz", "✍️ Metin ile ara"],
+    horizontal=True,
+)
 
-with col1:
-    camera_photo = st.camera_input("📷 Kamera ile Çek")
-
-with col2:
-    uploaded_file = st.file_uploader(
-        "📁 Dosya Yükle",
-        type=["jpg", "jpeg", "png", "webp", "bmp"],
-        help="İlaç kutusunun net fotoğrafını yükleyin"
-    )
-
-# Aktif görseli belirle
-image_source = camera_photo or uploaded_file
 image = None
+manual_drug = ""
 
-if image_source:
-    image = Image.open(io.BytesIO(image_source.getvalue()))
-    image = preprocess_image(image)
-    st.image(image, caption="Yüklenen Görsel", use_container_width=True)
+if analysis_mode == "📷 Görsel ile analiz":
+    col1, col2 = st.columns(2)
+
+    with col1:
+        camera_photo = st.camera_input("📷 Kamera ile Çek")
+
+    with col2:
+        uploaded_file = st.file_uploader(
+            "📁 Dosya Yükle",
+            type=["jpg", "jpeg", "png", "webp", "bmp"],
+            help="İlaç kutusunun net fotoğrafını yükleyin"
+        )
+
+    image_source = camera_photo or uploaded_file
+    if image_source:
+        image = Image.open(io.BytesIO(image_source.getvalue()))
+        image = preprocess_image(image)
+        st.image(image, caption="Yüklenen Görsel", use_container_width=True)
+    else:
+        st.info("İlaç kutusunun net bir fotoğrafını yükleyin veya kamerayla çekin.")
+else:
+    manual_drug = st.text_input(
+        "İlaç adı veya etken madde",
+        placeholder="örn: Dolven, Parol, Aspirin, İbuprofen...",
+        help="Bu modda yalnızca yazdığınız metne göre arama yapılır; görsel kullanılmaz."
+    ).strip()
+    st.caption("Manuel aramada sistem doğrudan yazdığınız ilaç adına veya etken maddeye göre analiz yapar.")
 
 st.divider()
 
-# ── Manuel Giriş (alternatif) ─────────────────────────────────────────────
-with st.expander("✍️ Manuel ilaç adı gir (görsel yoksa)"):
-    manual_drug = st.text_input("İlaç adı veya etken madde", placeholder="örn: Aspirin, İbuprofen, Parasetamol...")
-
 # ── Analiz Başlat ────────────────────────────────────────────────────────────
+is_ready_to_analyze = image is not None if analysis_mode == "📷 Görsel ile analiz" else bool(manual_drug)
 analyze_btn = st.button(
-    "🔍 Analiz Et",
+    "🔍 Görseli Analiz Et" if analysis_mode == "📷 Görsel ile analiz" else "🔎 Metinle Ara",
     type="primary",
     use_container_width=True,
-    disabled=(image is None and not manual_drug)
+    disabled=not is_ready_to_analyze
 )
 
 # ── Analiz Süreci ────────────────────────────────────────────────────────────
@@ -108,7 +121,7 @@ if analyze_btn:
     with st.status("🔄 Analiz yapılıyor...", expanded=True) as status:
 
         # ADIM 1: Görsel analiz
-        if image:
+        if analysis_mode == "📷 Görsel ile analiz" and image:
             st.write("🖼️ Görsel analiz ediliyor (Gemini Vision)...")
             try:
                 gemini_data = analyze_image_with_gemini(image)
@@ -127,7 +140,8 @@ if analyze_btn:
                 active_ingredient = cleaned
                 st.write(f"✅ Metin okundu: {cleaned[:100]}...")
 
-        elif manual_drug:
+        elif analysis_mode == "✍️ Metin ile ara" and manual_drug:
+            st.write(f"✍️ Manuel arama kullanılıyor: **{manual_drug}**")
             drug_name = manual_drug
             active_ingredient = manual_drug
 
