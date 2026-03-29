@@ -1,6 +1,7 @@
 from fpdf import FPDF
 from datetime import datetime
 from pathlib import Path
+import unicodedata
 
 
 def _find_unicode_font() -> str:
@@ -50,8 +51,20 @@ def _normalize_pdf_text(text: str) -> str:
         "🚫": "",
         "🔄": "",
         "💡": "",
+        "“": '"',
+        "”": '"',
+        "‘": "'",
+        "’": "'",
+        "–": "-",
+        "—": "-",
+        "…": "...",
+        "\u00a0": " ",
     })
-    return text.translate(translation_table)
+    normalized = text.translate(translation_table)
+    normalized = unicodedata.normalize("NFKD", normalized)
+    normalized = normalized.encode("ascii", "ignore").decode("ascii")
+    cleaned_lines = [" ".join(line.split()) for line in normalized.splitlines()]
+    return "\n".join(cleaned_lines)
 
 
 def _configure_pdf_font(pdf: FPDF) -> tuple[str, bool]:
