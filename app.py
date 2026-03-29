@@ -199,4 +199,4 @@ if analyze_btn:
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.divider()
 st.caption("💡 Powered by Groq LLaMA · Google Gemini · EasyOCR · Streamlit")
-st.caption("🎓 Bilişim Öğretmeni Python Yapay Zeka Kursü — Görüntü İşleme Projesi")
+st.caption("🎓 cimivicin")
