@@ -14,6 +14,59 @@ from utils.text_utils import clean_ocr_text, extract_drug_name
 
 load_dotenv()
 
+if "analysis_result" not in st.session_state:
+    st.session_state.analysis_result = None
+
+
+def render_analysis_result(result: dict) -> None:
+    """Kaydedilen analiz sonucunu tekrar tekrar gostermek icin kullan."""
+    st.divider()
+    st.subheader(f"📋 {result['drug_name']} - Analiz Sonucu")
+
+    gemini_data = result.get("gemini_data", {})
+    if gemini_data and "hata" not in gemini_data:
+        col_a, col_b, col_c = st.columns(3)
+        with col_a:
+            st.metric("İlaç Adı", gemini_data.get("ilac_adi", "-"))
+        with col_b:
+            st.metric("Etken Madde", gemini_data.get("etken_madde", "-"))
+        with col_c:
+            st.metric("Form", gemini_data.get("form", "-"))
+
+    st.markdown(result["analysis"])
+
+    st.error(
+        "🏥 ÖNEMLI UYARI: Bu analiz yapay zeka tarafından oluşturulmuştur. "
+        "Tıbbi teşhis veya tedavi tavsiyesi değildir. "
+        "İlaç kullanımı için mutlaka doktorunuza danışınız.",
+        icon="⚠️"
+    )
+
+    st.divider()
+    st.subheader("📥 Raporu İndir")
+    dl_col1, dl_col2 = st.columns(2)
+
+    with dl_col1:
+        if result.get("pdf_bytes"):
+            st.download_button(
+                label="📄 PDF İndir",
+                data=result["pdf_bytes"],
+                file_name=f"ilac_raporu_{result['drug_name'].replace(' ', '_')}.pdf",
+                mime="application/pdf",
+                use_container_width=True,
+            )
+        else:
+            st.warning("PDF raporu şu an hazırlanamadı. Metin indirme kullanılabilir.")
+
+    with dl_col2:
+        st.download_button(
+            label="📝 Metin İndir",
+            data=result["text_bytes"],
+            file_name=f"ilac_raporu_{result['drug_name'].replace(' ', '_')}.txt",
+            mime="text/plain",
+            use_container_width=True
+        )
+
 # ── Sayfa ayarları ──────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="💊 İlaç Analiz Asistanı",
@@ -162,53 +215,22 @@ if analyze_btn:
 
         status.update(label="✅ Analiz tamamlandı!", state="complete")
 
-    # ── Sonuçlar ────────────────────────────────────────────────────────────
-    st.divider()
-    st.subheader(f"📋 {drug_name} - Analiz Sonucu")
+    pdf_bytes = None
+    try:
+        pdf_bytes = generate_pdf_report(drug_name, analysis)
+    except Exception:
+        pdf_bytes = None
 
-    # Gemini'den gelen yapısal bilgi
-    if gemini_data and "hata" not in gemini_data:
-        col_a, col_b, col_c = st.columns(3)
-        with col_a:
-            st.metric("İlaç Adı", gemini_data.get("ilac_adi", "-"))
-        with col_b:
-            st.metric("Etken Madde", gemini_data.get("etken_madde", "-"))
-        with col_c:
-            st.metric("Form", gemini_data.get("form", "-"))
+    st.session_state.analysis_result = {
+        "drug_name": drug_name,
+        "analysis": analysis,
+        "gemini_data": gemini_data,
+        "pdf_bytes": pdf_bytes,
+        "text_bytes": analysis.encode("utf-8"),
+    }
 
-    # Ana analiz metni
-    st.markdown(analysis)
-
-    # ── Uyarı (tekrar) ──────────────────────────────────────────────────────
-    st.error(
-        "🏥 ÖNEMLI UYARI: Bu analiz yapay zeka tarafından oluşturulmuştur. "
-        "Tıbbi teşhis veya tedavi tavsiyesi değildir. "
-        "İlaç kullanımı için mutlaka doktorunuza danışınız.",
-        icon="⚠️"
-    )
-
-    # ── İndirme Seçenekleri ─────────────────────────────────────────────────
-    st.divider()
-    st.subheader("📥 Raporu İndir")
-    dl_col1, dl_col2 = st.columns(2)
-
-    with dl_col1:
-        st.download_button(
-            label="📄 PDF İndir",
-            data=generate_pdf_report(drug_name, analysis),
-            file_name=f"ilac_raporu_{drug_name.replace(' ', '_')}.pdf",
-            mime="application/pdf",
-            use_container_width=True
-        )
-
-    with dl_col2:
-        st.download_button(
-            label="📝 Metin İndir",
-            data=analysis.encode("utf-8"),
-            file_name=f"ilac_raporu_{drug_name.replace(' ', '_')}.txt",
-            mime="text/plain",
-            use_container_width=True
-        )
+if st.session_state.analysis_result:
+    render_analysis_result(st.session_state.analysis_result)
 
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.divider()
