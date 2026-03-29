@@ -101,26 +101,28 @@ st.markdown("""
         padding-bottom: 3rem;
     }
     .warning-box {
-        background: linear-gradient(135deg, #fff7e8 0%, #fff2d9 100%);
-        border: 1px solid rgba(199, 74, 87, 0.18);
-        border-radius: 22px;
-        padding: 18px 20px;
-        margin: 14px 0;
-        font-weight: bold;
-        color: var(--ink);
-        box-shadow: var(--shadow);
+        background: rgba(255, 248, 232, 0.72);
+        border: 1px solid rgba(199, 74, 87, 0.14);
+        border-radius: 14px;
+        padding: 10px 14px;
+        margin: 10px 0 6px 0;
+        font-weight: 500;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: var(--muted);
+        box-shadow: none;
     }
     .section-shell {
-        background: linear-gradient(135deg, rgba(255,255,255,0.94), rgba(255,248,244,0.84));
-        border: 1px solid var(--line);
-        border-radius: 28px;
-        padding: 24px 26px;
-        margin: 8px 0 18px 0;
-        box-shadow: var(--shadow);
+        background: rgba(255,255,255,0.72);
+        border: 1px solid rgba(37, 50, 74, 0.08);
+        border-radius: 18px;
+        padding: 14px 16px;
+        margin: 4px 0 12px 0;
+        box-shadow: none;
     }
     .section-kicker {
-        margin: 0 0 8px 0;
-        font-size: 0.82rem;
+        margin: 0 0 4px 0;
+        font-size: 0.7rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--accent);
@@ -128,15 +130,15 @@ st.markdown("""
     }
     .section-title {
         margin: 0;
-        font-size: 1.75rem;
-        line-height: 1.15;
+        font-size: 1.05rem;
+        line-height: 1.3;
         color: var(--ink);
     }
     .section-copy {
-        margin: 10px 0 0 0;
+        margin: 6px 0 0 0;
         color: var(--muted);
-        font-size: 1rem;
-        line-height: 1.6;
+        font-size: 0.88rem;
+        line-height: 1.45;
     }
     .panel-kicker {
         margin: 0;
@@ -147,16 +149,16 @@ st.markdown("""
         font-weight: 700;
     }
     .panel-title {
-        margin: 8px 0 0 0;
+        margin: 6px 0 0 0;
         color: var(--ink);
-        font-size: 1.2rem;
+        font-size: 1.02rem;
         font-weight: 700;
     }
     .panel-copy {
-        margin: 8px 0 18px 0;
+        margin: 6px 0 12px 0;
         color: var(--muted);
-        line-height: 1.55;
-        font-size: 0.96rem;
+        line-height: 1.45;
+        font-size: 0.84rem;
     }
     [data-testid="stRadio"] {
         background: rgba(255,255,255,0.76);
@@ -213,11 +215,11 @@ st.markdown("""
         .stButton > button { width: 100% !important; }
         h1 { font-size: 1.5rem !important; }
         .section-shell {
-            padding: 20px 18px;
-            border-radius: 22px;
+            padding: 12px 14px;
+            border-radius: 16px;
         }
         .section-title {
-            font-size: 1.4rem;
+            font-size: 0.98rem;
         }
     }
 </style>
@@ -242,10 +244,9 @@ st.divider()
 st.markdown("""
 <div class="section-shell">
     <p class="section-kicker">Akıllı Tarama Alanı</p>
-    <h2 class="section-title">İlacını etkileyici bir akışla analiz et</h2>
+    <h2 class="section-title">Görsel veya metin ile hızlı analiz</h2>
     <p class="section-copy">
-        Fotoğrafla kutu üzerindeki bilgileri çıkar veya ilaç adını yazarak doğrudan arama başlat.
-        Bu bölüm canlı sunumda daha güçlü görünmesi için kart yapısında düzenlendi.
+        Fotoğraf yükle ya da ilaç adını yaz, sistem uygun akışla analiz etsin.
     </p>
 </div>
 """, unsafe_allow_html=True)
